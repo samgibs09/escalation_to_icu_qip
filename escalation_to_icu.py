@@ -51,6 +51,15 @@ chi2_why, p_why, dof_why, expected_why = chi2_contingency(table_why)
 table_confidence = pd.crosstab(aware_data['T'], aware_data['AC'])
 chi2_confidence, p_confidence, dof_confidence, expected_confidence = chi2_contingency(table_confidence)
 
+# Display the results of the Chi-square tests
+print(f'\nChi-square statistic for understanding how to access C4C Programme: {chi2_how}')
+print(f'p-value for understanding how to access C4C Programme: {p_how}')
+print(f'\nChi-square statistic for understanding why to access C4C Programme: {chi2_why}')
+print(f'p-value for understanding why to access C4C Programme: {p_why}')
+print(f'\nChi-square statistic for confidence in using C4C Programme: {chi2_confidence}')
+print(f'p-value for confidence in using C4C Programme: {p_confidence}')
+
+
 # Visibility of poster by ward
 poster_visibility_overall = data['AE'].value_counts(normalize=True) * 100
 poster_visibility_by_ward = data.groupby('D')['AE'].value_counts(normalize=True).unstack() * 100
@@ -63,6 +72,10 @@ print(poster_visibility_by_ward)
 contingency_table_poster = pd.crosstab(data['D'], data['AE'])
 chi2_poster, p_poster, dof_poster, expected_poster = chi2_contingency(contingency_table_poster)
 
+# Display the results of the Chi-square test
+print(f'\nChi-square statistic for poster visibility by ward: {chi2_poster}')
+print(f'p-value for poster visibility by ward: {p_poster}')
+
 # Effectiveness of poster in understanding
 saw_poster_data = data[data['AE'] == 'Yes']
 poster_helped_understanding = saw_poster_data['AF'].value_counts(normalize=True) * 100
@@ -72,6 +85,10 @@ print(poster_helped_understanding)
 # Perform Chi-square test for understanding from poster
 table_understanding = pd.crosstab(saw_poster_data['AE'], saw_poster_data['AF'])
 chi2_understanding, p_understanding, dof_understanding, expected_understanding = chi2_contingency(table_understanding)
+
+# Display the results of the Chi-square test
+print(f'\nChi-square statistic for understanding from poster: {chi2_understanding}')
+print(f'p-value for understanding from poster: {p_understanding}')
 
 # Performance of poster viewers in understanding C4C
 performance_knowing_what = saw_poster_data['Y'].value_counts(normalize=True) * 100
@@ -94,6 +111,10 @@ print(asked_about_concerns)
 contingency_table_concerns = pd.crosstab(data['D'], data['AG'])
 chi2_concerns, p_concerns, dof_concerns, expected_concerns = chi2_contingency(contingency_table_concerns)
 
+# Display the results of the Chi-square test
+print(f'\nChi-square statistic for being asked about concerns on ward round: {chi2_concerns}')
+print(f'p-value for being asked about concerns on ward round: {p_concerns}')
+
 # Asked about concerns daily
 asked_about_concerns_daily = data['AH'].value_counts(normalize=True) * 100
 print("\nAsked About Concerns Daily:")
@@ -102,3 +123,7 @@ print(asked_about_concerns_daily)
 # Perform Chi-square test for being asked about concerns daily
 contingency_table_daily = pd.crosstab(data['D'], data['AH'])
 chi2_daily, p_daily, dof_daily, expected_daily = chi2_contingency(contingency_table_daily)
+
+# Display the results of the Chi-square test
+print(f'\nChi-square statistic for being asked about concerns daily: {chi2_daily}')
+print(f'p-value for being asked about concerns daily: {p_daily}')
