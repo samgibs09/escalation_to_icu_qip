@@ -30,14 +30,14 @@ print(mention_escalation)
 
 # Understanding of C4C programme
 understanding_how = aware_data['Do they accurately describe why you would use C4C?'].value_counts(normalize=True) * 100
-understanding_why = aware_data['AB'].value_counts(normalize=True) * 100
+understanding_why = aware_data['Accurately described how to contact'].value_counts(normalize=True) * 100
 print("\nUnderstanding of How to Access C4C Programme:")
 print(understanding_how)
 print("\nUnderstanding of Why to Access C4C Programme:")
 print(understanding_why)
 
 # Confidence in using C4C programme
-confidence_in_using = aware_data['AC'].value_counts(normalize=True) * 100
+confidence_in_using = aware_data['How confident would you feel using the Call4Concern program if necessary?'].value_counts(normalize=True) * 100
 print("\nConfidence in Using C4C Programme:")
 print(confidence_in_using)
 
@@ -45,10 +45,10 @@ print(confidence_in_using)
 table_how = pd.crosstab(aware_data['Are you aware of the Call4Concern Program?'], aware_data['Do they accurately describe why you would use C4C?'])
 chi2_how, p_how, dof_how, expected_how = chi2_contingency(table_how)
 
-table_why = pd.crosstab(aware_data['Are you aware of the Call4Concern Program?'], aware_data['AB'])
+table_why = pd.crosstab(aware_data['Are you aware of the Call4Concern Program?'], aware_data['Accurately described how to contact'])
 chi2_why, p_why, dof_why, expected_why = chi2_contingency(table_why)
 
-table_confidence = pd.crosstab(aware_data['Are you aware of the Call4Concern Program?'], aware_data['AC'])
+table_confidence = pd.crosstab(aware_data['Are you aware of the Call4Concern Program?'], aware_data['How confident would you feel using the Call4Concern program if necessary?'])
 chi2_confidence, p_confidence, dof_confidence, expected_confidence = chi2_contingency(table_confidence)
 
 # Display the results of the Chi-square tests
@@ -78,12 +78,12 @@ print(f'p-value for poster visibility by ward: {p_poster}')
 
 # Effectiveness of poster in understanding
 saw_poster_data = data[data['Have you seen the informational poster about the C4C program'] == 'Yes']
-poster_helped_understanding = saw_poster_data['AF'].value_counts(normalize=True) * 100
+poster_helped_understanding = saw_poster_data['Does the poster help you understand what C4C is?'].value_counts(normalize=True) * 100
 print("\nEffectiveness of Poster in Understanding C4C Programme:")
 print(poster_helped_understanding)
 
 # Perform Chi-square test for understanding from poster
-table_understanding = pd.crosstab(saw_poster_data['Have you seen the informational poster about the C4C program'], saw_poster_data['AF'])
+table_understanding = pd.crosstab(saw_poster_data['Have you seen the informational poster about the C4C program'], saw_poster_data['Does the poster help you understand what C4C is?'])
 chi2_understanding, p_understanding, dof_understanding, expected_understanding = chi2_contingency(table_understanding)
 
 # Display the results of the Chi-square test
@@ -92,8 +92,8 @@ print(f'p-value for understanding from poster: {p_understanding}')
 
 # Performance of poster viewers in understanding C4C
 performance_knowing_what = saw_poster_data['Do they accurately describe why you would use C4C?'].value_counts(normalize=True) * 100
-performance_how_to_access = saw_poster_data['AB'].value_counts(normalize=True) * 100
-performance_confidence = saw_poster_data['AC'].value_counts(normalize=True) * 100
+performance_how_to_access = saw_poster_data['Accurately described how to contact'].value_counts(normalize=True) * 100
+performance_confidence = saw_poster_data['How confident would you feel using the Call4Concern program if necessary?'].value_counts(normalize=True) * 100
 print("\nPerformance of Poster Viewers in Understanding C4C Programme:")
 print("Knowing What C4C Programme is:")
 print(performance_knowing_what)
