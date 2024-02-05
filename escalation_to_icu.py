@@ -29,8 +29,8 @@ print("\nMention of C4C Programme in Escalation:")
 print(mention_escalation)
 
 # Understanding of C4C programme
-understanding_how = aware_data['Do they accurately describe why you would use C4C?'].value_counts(normalize=True) * 100
-understanding_why = aware_data['Accurately described how to contact'].value_counts(normalize=True) * 100
+understanding_why = aware_data['Do they accurately describe why you would use C4C?'].value_counts(normalize=True) * 100
+understanding_how = aware_data['Accurately described how to contact'].value_counts(normalize=True) * 100
 print("\nUnderstanding of How to Access C4C Programme:")
 print(understanding_how)
 print("\nUnderstanding of Why to Access C4C Programme:")
@@ -58,7 +58,6 @@ print(f'\nChi-square statistic for understanding why to access C4C Programme: {c
 print(f'p-value for understanding why to access C4C Programme: {p_why}')
 print(f'\nChi-square statistic for confidence in using C4C Programme: {chi2_confidence}')
 print(f'p-value for confidence in using C4C Programme: {p_confidence}')
-
 
 # Visibility of poster by ward
 poster_visibility_overall = data['Have you seen the informational poster about the C4C program'].value_counts(normalize=True) * 100
@@ -91,16 +90,18 @@ print(f'\nChi-square statistic for understanding from poster: {chi2_understandin
 print(f'p-value for understanding from poster: {p_understanding}')
 
 # Performance of poster viewers in understanding C4C
-performance_knowing_what = saw_poster_data['Do they accurately describe why you would use C4C?'].value_counts(normalize=True) * 100
-performance_how_to_access = saw_poster_data['Accurately described how to contact'].value_counts(normalize=True) * 100
-performance_confidence = saw_poster_data['How confident would you feel using the Call4Concern program if necessary?'].value_counts(normalize=True) * 100
+poster_understanding_why = saw_poster_data['Do they accurately describe why you would use C4C?'].value_counts(normalize=True) * 100
+poster_how_to_access = saw_poster_data['Accurately described how to contact'].value_counts(normalize=True) * 100
+poster_confidence = saw_poster_data['How confident would you feel using the Call4Concern program if necessary?'].value_counts(normalize=True) * 100
 print("\nPerformance of Poster Viewers in Understanding C4C Programme:")
-print("Knowing What C4C Programme is:")
-print(performance_knowing_what)
+print("Knowing Why to access C4C Programme:")
+print(poster_understanding_why)
 print("Knowing How to Access C4C Programme:")
-print(performance_how_to_access)
+print(poster_how_to_access)
 print("Confidence in Using C4C Programme:")
-print(performance_confidence)
+print(poster_confidence)
+
+# Perform Chi-square test for poster_understanding_why vs understanding_why
 
 # Asked about concerns on ward round
 asked_about_concerns = data['Have you been asked about any concerns that you may have during the ward round?'].value_counts(normalize=True) * 100
