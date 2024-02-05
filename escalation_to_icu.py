@@ -147,3 +147,40 @@ chi2_daily, p_daily, dof_daily, expected_daily = chi2_contingency(contingency_ta
 # Display the results of the Chi-square test
 print(f'\nChi-square statistic for being asked about concerns daily: {chi2_daily}')
 print(f'p-value for being asked about concerns daily: {p_daily}')
+
+# Create a contingency table for poster visibility vs awareness
+contingency_table_poster_awareness = pd.crosstab(
+    data['Have you seen the informational poster about the C4C program'], 
+    data['Are you aware of the Call4Concern Program?']
+)
+
+# Perform Chi-square test for independence
+chi2_poster_awareness, p_poster_awareness, _, _ = chi2_contingency(contingency_table_poster_awareness)
+
+# Display the results
+print(f'Chi-square statistic for poster visibility vs awareness: {chi2_poster_awareness}')
+print(f'p-value for poster visibility vs awareness: {p_poster_awareness}')
+
+# Create a contingency table for awareness of the poster vs awareness of the C4C program
+contingency_table_awareness_poster = pd.crosstab(
+    data['Are you aware of the Call4Concern Program?'],
+    data['Have you seen the informational poster about the C4C program']
+)
+
+# Display the contingency table
+print("Contingency Table: Awareness of Program vs Awareness of Poster")
+print(contingency_table_awareness_poster)
+
+# Count of people who are aware of the program but not aware of the poster
+count_aware_program_not_poster = contingency_table_awareness_poster.loc['Yes', 'No']
+print(f"\nNumber of people aware of the C4C program but not aware of the poster: {count_aware_program_not_poster}")
+
+# Analysis for poster viewers on describing how to use the program
+how_to_use = saw_poster_data['Accurately described how to contact'].value_counts(normalize=True) * 100
+print("\nHow well poster viewers describe how to use the program:")
+print(how_to_use)
+
+# Analysis for poster viewers on recalling how to escalate
+how_to_escalate = saw_poster_data['Do they accurately describe why you would use C4C?'].value_counts(normalize=True) * 100
+print("\nHow well poster viewers recall how to escalate:")
+print(how_to_escalate)
