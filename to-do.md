@@ -11,3 +11,5 @@ To Do:
 - Of those aware of c4c, are poster viewers more able to describe how any why to use the programme
 - Of poster viewers, how well do they describe how to use the programme?
 - And how well do they recall how to escalate?
+
+- Work out what to do with confusing responses of are you asked daily?
