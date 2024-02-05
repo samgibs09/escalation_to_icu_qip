@@ -5,8 +5,8 @@ from scipy.stats import chi2_contingency
 data = pd.read_excel('Call4Concern(1-59) (anonymised) v3.xlsx')
 
 # Awareness of C4C programme overall and by ward (D)
-awareness_overall = data['Are you aware of the Call4Concern Program?'].value_counts(normalize="Yes") * 100
-awareness_by_ward = data.groupby('What Ward')['Are you aware of the Call4Concern Program?'].value_counts(normalize="Yes").unstack() * 100
+awareness_overall = data['Are you aware of the Call4Concern Program?'].value_counts(normalize=True) * 100
+awareness_by_ward = data.groupby('What Ward')['Are you aware of the Call4Concern Program?'].value_counts(normalize=True).unstack() * 100
 
 # Display awareness
 print("Awareness of C4C Programme Overall:")
@@ -42,11 +42,11 @@ print("\nConfidence in Using C4C Programme:")
 print(confidence_in_using)
 
 # Perform Chi-square test for understanding how and why to access C4C Programme
-table_how = pd.crosstab(aware_data['Are you aware of the Call4Concern Program?'], aware_data['Do they accurately describe why you would use C4C?'])
-chi2_how, p_how, dof_how, expected_how = chi2_contingency(table_how)
-
-table_why = pd.crosstab(aware_data['Are you aware of the Call4Concern Program?'], aware_data['Accurately described how to contact'])
+table_why = pd.crosstab(aware_data['Are you aware of the Call4Concern Program?'], aware_data['Do they accurately describe why you would use C4C?'])
 chi2_why, p_why, dof_why, expected_why = chi2_contingency(table_why)
+
+table_how = pd.crosstab(aware_data['Are you aware of the Call4Concern Program?'], aware_data['Accurately described how to contact'])
+chi2_how, p_how, dof_how, expected_how = chi2_contingency(table_how)
 
 table_confidence = pd.crosstab(aware_data['Are you aware of the Call4Concern Program?'], aware_data['How confident would you feel using the Call4Concern program if necessary?'])
 chi2_confidence, p_confidence, dof_confidence, expected_confidence = chi2_contingency(table_confidence)
@@ -102,6 +102,25 @@ print("Confidence in Using C4C Programme:")
 print(poster_confidence)
 
 # Perform Chi-square test for poster_understanding_why vs understanding_why
+table_poster_why = pd.crosstab(saw_poster_data['Have you seen the informational poster about the C4C program'], saw_poster_data['Do they accurately describe why you would use C4C?'])
+chi2_poster_why, p_poster_why, dof_poster_why, expected_poster_why = chi2_contingency(table_poster_why)
+
+# Perform Chi-square test for poster_how_to_access vs understanding_how
+table_poster_how = pd.crosstab(saw_poster_data['Have you seen the informational poster about the C4C program'], saw_poster_data['Accurately described how to contact'])
+chi2_poster_how, p_poster_how, dof_poster_how, expected_poster_how = chi2_contingency(table_poster_how)
+
+# Perform Chi-square test for poster_confidence vs confidence_in_using
+table_poster_confidence = pd.crosstab(saw_poster_data['Have you seen the informational poster about the C4C program'], saw_poster_data['How confident would you feel using the Call4Concern program if necessary?'])
+chi2_poster_confidence, p_poster_confidence, dof_poster_confidence, expected_poster_confidence = chi2_contingency(table_poster_confidence)
+
+# Display the results of the Chi-square tests
+print(f'\nChi-square statistic for poster_understanding_why vs understanding_why: {chi2_poster_why}')
+print(f'p-value for poster_understanding_why vs understanding_why: {p_poster_why}')
+print(f'\nChi-square statistic for poster_how_to_access vs understanding_how: {chi2_poster_how}')
+print(f'p-value for poster_how_to_access vs understanding_how: {p_poster_how}')
+print(f'\nChi-square statistic for poster_confidence vs confidence_in_using: {chi2_poster_confidence}')
+print(f'p-value for poster_confidence vs confidence_in_using: {p_poster_confidence}')
+
 
 # Asked about concerns on ward round
 asked_about_concerns = data['Have you been asked about any concerns that you may have during the ward round?'].value_counts(normalize=True) * 100
