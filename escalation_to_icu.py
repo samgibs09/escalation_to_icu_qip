@@ -162,11 +162,16 @@ non_poster_data['Do they mention c4c??_numeric'] = non_poster_data['Do they ment
 # Now perform the T-test on the numeric columns
 
 # Ensure the NaN values are handled or filtered out before this step
+t_test_awareness_of_c4c = ttest_ind(
+    saw_poster_data.dropna(subset=['Are you aware of the Call4Concern Program?'])['Are you aware of the Call4Concern Program?'].map({'Yes': 1, 'No': 0}),
+    non_poster_data.dropna(subset=['Are you aware of the Call4Concern Program?'])['Are you aware of the Call4Concern Program?'].map({'Yes': 1, 'No': 0})
+)
 t_test_recall = ttest_ind(
     saw_poster_data.dropna(subset=['Do they mention c4c??_numeric'])['Do they mention c4c??_numeric'],
     non_poster_data.dropna(subset=['Do they mention c4c??_numeric'])['Do they mention c4c??_numeric']
 )
 
+print(f'T-test for difference in awareness of C4C programme between poster and non-poster viewers: {t_test_awareness_of_c4c.statistic}, p-value: {t_test_awareness_of_c4c.pvalue}')
 print(f'T-test for difference in recall of C4C programme between poster and non-poster viewers: {t_test_recall.statistic}, p-value: {t_test_recall.pvalue}')
 
 # Asked about concerns on ward round
