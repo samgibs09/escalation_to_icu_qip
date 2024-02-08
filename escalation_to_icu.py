@@ -1,5 +1,6 @@
 import pandas as pd
 from scipy.stats import chi2_contingency
+from scipy.stats import ttest_ind
 
 # Load the dataset
 data = pd.read_excel('Call4Concern(1-59) (anonymised) v3.xlsx')
@@ -94,15 +95,19 @@ print("\nEffectiveness of Poster in self-reported improvement of understanding C
 print(poster_helped_understanding)
 
 # Performance of poster viewers in understanding C4C
+poster_awareness_of_c4c_raw = saw_poster_data['Are you aware of the Call4Concern Program?'].value_counts(normalize=False)
 poster_understanding_why_raw = saw_poster_data['Do they accurately describe why you would use C4C?'].value_counts(normalize=False)
 poster_how_to_access_raw = saw_poster_data['Accurately described how to contact'].value_counts(normalize=False)
 poster_confidence_raw = saw_poster_data['How confident would you feel using the Call4Concern program if necessary?'].value_counts(normalize=False)
 poster_recall_raw = saw_poster_data['Do they mention c4c??'].value_counts(normalize=False)
+poster_awareness_of_c4c = saw_poster_data['Are you aware of the Call4Concern Program?'].value_counts(normalize=True) * 100
 poster_understanding_why = saw_poster_data['Do they accurately describe why you would use C4C?'].value_counts(normalize=True) * 100
 poster_how_to_access = saw_poster_data['Accurately described how to contact'].value_counts(normalize=True) * 100
 poster_confidence = saw_poster_data['How confident would you feel using the Call4Concern program if necessary?'].value_counts(normalize=True) * 100
 poster_recall = saw_poster_data['Do they mention c4c??'].value_counts(normalize=True) * 100
 print("\nPerformance of Poster Viewers in Understanding C4C Programme (raw):")
+print("\nAwareness of C4C Programme (raw):")
+print(poster_awareness_of_c4c_raw)
 print("\nKnowing Why to access C4C Programme (raw):")
 print(poster_understanding_why_raw)
 print("\nKnowing How to Access C4C Programme (raw):")
@@ -113,6 +118,8 @@ print("\nRecall of C4C Programme when asked about Escalation (raw):")
 print(poster_recall_raw)
 
 print("\nPerformance of Poster Viewers in Understanding C4C Programme:")
+print("\nAwareness of C4C Programme:")
+print(poster_awareness_of_c4c)
 print("\nKnowing Why to access C4C Programme:")
 print(poster_understanding_why)
 print("\nKnowing How to Access C4C Programme:")
@@ -121,6 +128,46 @@ print("\nConfidence in Using C4C Programme:")
 print(poster_confidence)
 print("\nRecall of C4C Programme when asked about Escalation:")
 print(poster_recall)
+
+# Performance of non-poster viewers in understanding C4C
+non_poster_data = data[data['Have you seen the informational poster about the C4C program'] == 'No']
+non_poster_recall_raw = non_poster_data['Do they mention c4c??'].value_counts(normalize=False)
+non_poster_awareness_of_c4c_raw = non_poster_data['Are you aware of the Call4Concern Program?'].value_counts(normalize=False)
+non_poster_recall = non_poster_data['Do they mention c4c??'].value_counts(normalize=True) * 100
+non_poster_awareness_of_c4c = non_poster_data['Are you aware of the Call4Concern Program?'].value_counts(normalize=True) * 100
+print("\nPerformance of Non-Poster Viewers in Understanding C4C Programme (raw):")
+print("\nAwareness of C4C Programme (raw):")
+print(non_poster_awareness_of_c4c_raw)
+print("\nRecall of C4C Programme when asked about Escalation (raw):")
+print(non_poster_recall_raw)
+
+print("\nPerformance of Non-Poster Viewers in Understanding C4C Programme:")
+print("\nAwareness of C4C Programme:")
+print(non_poster_awareness_of_c4c)
+print("\nRecall of C4C Programme when asked about Escalation:")
+print(non_poster_recall)
+
+
+# Filter data for those who are aware of C4C Programme and create a copy to avoid SettingWithCopyWarning
+aware_data = data[data['Are you aware of the Call4Concern Program?'] == 'Yes'].copy()
+
+# For poster visibility subsets
+saw_poster_data = data[data['Have you seen the informational poster about the C4C program'] == 'Yes'].copy()
+non_poster_data = data[data['Have you seen the informational poster about the C4C program'] == 'No'].copy()
+
+# Convert categorical 'Yes'/'No' responses to numeric values for analysis
+saw_poster_data['Do they mention c4c??_numeric'] = saw_poster_data['Do they mention c4c??'].map({'Yes': 1, 'No': 0})
+non_poster_data['Do they mention c4c??_numeric'] = non_poster_data['Do they mention c4c??'].map({'Yes': 1, 'No': 0})
+
+# Now perform the T-test on the numeric columns
+
+# Ensure the NaN values are handled or filtered out before this step
+t_test_recall = ttest_ind(
+    saw_poster_data.dropna(subset=['Do they mention c4c??_numeric'])['Do they mention c4c??_numeric'],
+    non_poster_data.dropna(subset=['Do they mention c4c??_numeric'])['Do they mention c4c??_numeric']
+)
+
+print(f'T-test for difference in recall of C4C programme between poster and non-poster viewers: {t_test_recall.statistic}, p-value: {t_test_recall.pvalue}')
 
 # Asked about concerns on ward round
 asked_about_concerns_raw = data['Have you been asked about any concerns that you may have during the ward round?'].value_counts(normalize=False)
