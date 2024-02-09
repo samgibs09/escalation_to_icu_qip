@@ -1,6 +1,7 @@
 import pandas as pd
 from scipy.stats import chi2_contingency
 from scipy.stats import ttest_ind
+from scipy.stats import mannwhitneyu
 
 # Load the dataset
 data = pd.read_excel('Call4Concern(1-59) (anonymised) v3.xlsx')
@@ -190,22 +191,6 @@ chi2_concerns, p_concerns, dof_concerns, expected_concerns = chi2_contingency(co
 print(f'\nChi-square statistic for being asked about concerns on ward round: {chi2_concerns}')
 print(f'p-value for being asked about concerns on ward round: {p_concerns}')
 
-# Asked about concerns 'every day' vs not asked about concerns 'every day'
-asked_about_concerns_daily_raw = data['Are you asked about your concerns daily?'].value_counts(normalize=False)
-asked_about_concerns_daily = data['Are you asked about your concerns daily?'].value_counts(normalize=True) * 100
-print("\nAsked About Concerns Daily (raw):")
-print(asked_about_concerns_daily_raw)
-print("\nAsked About Concerns Daily:")
-print(asked_about_concerns_daily)
-
-# Perform Chi-square test for being asked about concerns daily
-contingency_table_daily = pd.crosstab(data['What Ward'], data['Are you asked about your concerns daily?'])
-chi2_daily, p_daily, dof_daily, expected_daily = chi2_contingency(contingency_table_daily)
-
-# Display the results of the Chi-square test
-print(f'\nChi-square statistic for being asked about concerns daily: {chi2_daily}')
-print(f'p-value for being asked about concerns daily: {p_daily}')
-
 # Asked about concerns on ward round by ward
 asked_about_concerns_by_ward_raw = data.groupby('What Ward')['Have you been asked about any concerns that you may have during the ward round?'].value_counts(normalize=False).unstack()
 asked_about_concerns_by_ward = data.groupby('What Ward')['Have you been asked about any concerns that you may have during the ward round?'].value_counts(normalize=True).unstack() * 100
@@ -295,3 +280,58 @@ print(how_to_escalate)
 confidence = saw_poster_data['How confident would you feel using the Call4Concern program if necessary?'].value_counts(normalize=True) * 100
 print("\nConfidence in using the program by poster viewers:")
 print(confidence)
+
+# Asked about concerns 'every day' vs not asked about concerns 'every day' for 'Do you feel able to participate in decisions relating to your/the patient's care with the healthcare team?'
+# Map textual responses to numerical values for analysis
+response_mapping = {
+    'Always': 5,
+    'Often': 4,
+    'Sometimes': 3,
+    'Rarely': 2,
+    'Never': 1
+}
+
+# Apply mapping to create a new column with numerical values for participation
+data['participation_score'] = data['Do you feel able to participate in decisions relating to your/the patient\'s care with the healthcare team?'].map(response_mapping)
+
+# Regroup 'Are you asked about your concerns daily?' into 'Every day' and 'Not Every day'
+data['daily_concern_inquiry_group'] = data['Are you asked about your concerns daily?'].apply(lambda x: 'Every day' if x == 'Every day' else 'Not Every day')
+
+# Calculate mean participation scores for the new grouping
+mean_participation_scores_regrouped = data.groupby('daily_concern_inquiry_group')['participation_score'].mean()
+print("\nMean Participation Scores for Regrouped Data:")
+print(mean_participation_scores_regrouped)
+
+# Separate the groups for 'Every day' and 'Not Every day'
+every_day_scores = data[data['daily_concern_inquiry_group'] == 'Every day']['participation_score']
+not_every_day_scores = data[data['daily_concern_inquiry_group'] == 'Not Every day']['participation_score']
+
+# Perform Mann-Whitney U Test as the data is ordinal
+u_stat, p_val_mw = mannwhitneyu(every_day_scores.dropna(), not_every_day_scores.dropna(), alternative='two-sided')
+
+print(f'\nMann-Whitney U test results: U statistic={u_stat}, p-value={p_val_mw}')
+
+# Interpret results
+if p_val_mw < 0.05:
+    print("There is a significant difference in feeling able to participate in decisions between those asked about their concerns 'Every day' and 'Not Every day'.")
+else:
+    print("There is no significant difference in feeling able to participate in decisions between those asked about their concerns 'Every day' and 'Not Every day'.")
+
+# Aware of C4C programme vs not aware of C4C programme for 'Do you feel able to participate in decisions relating to your/the patient's care with the healthcare team?'
+
+# Separate the groups for 'Yes' and 'No'
+aware_scores = data[data['Are you aware of the Call4Concern Program?'] == 'Yes']['participation_score']
+not_aware_scores = data[data['Are you aware of the Call4Concern Program?'] == 'No']['participation_score']
+
+# Perform Mann-Whitney U Test as the data is ordinal
+u_stat, p_val_mw = mannwhitneyu(aware_scores.dropna(), not_aware_scores.dropna(), alternative='two-sided')
+
+print(f'\nMann-Whitney U test results: U statistic={u_stat}, p-value={p_val_mw}')
+
+# Interpret results
+
+if p_val_mw < 0.05:
+    print("There is a significant difference in feeling able to participate in decisions between those aware of the C4C programme and those not aware.")
+else:
+    print("There is no significant difference in feeling able to participate in decisions between those aware of the C4C programme and those not aware.")
+
