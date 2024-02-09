@@ -323,6 +323,21 @@ else:
 aware_scores = data[data['Are you aware of the Call4Concern Program?'] == 'Yes']['participation_score']
 not_aware_scores = data[data['Are you aware of the Call4Concern Program?'] == 'No']['participation_score']
 
+# Create a contingency table for awareness vs. categorical representation of participation
+participation_categories = data['Do you feel able to participate in decisions relating to your/the patient\'s care with the healthcare team?']
+awareness = data['Are you aware of the Call4Concern Program?']
+
+contingency_table = pd.crosstab(awareness, participation_categories)
+
+print("\nContingency Table: Awareness of C4C vs. Participation in Decisions")
+print(contingency_table)
+
+# Summarize participation scores by awareness
+summary_by_awareness = data.groupby('Are you aware of the Call4Concern Program?')['participation_score'].agg(['mean', 'median', 'count'])
+
+print("\nSummary of Participation Scores by Awareness of C4C")
+print(summary_by_awareness)
+
 # Perform Mann-Whitney U Test as the data is ordinal
 u_stat, p_val_mw = mannwhitneyu(aware_scores.dropna(), not_aware_scores.dropna(), alternative='two-sided')
 
