@@ -190,6 +190,22 @@ chi2_concerns, p_concerns, dof_concerns, expected_concerns = chi2_contingency(co
 print(f'\nChi-square statistic for being asked about concerns on ward round: {chi2_concerns}')
 print(f'p-value for being asked about concerns on ward round: {p_concerns}')
 
+# Asked about concerns 'every day' vs not asked about concerns 'every day'
+asked_about_concerns_daily_raw = data['Are you asked about your concerns daily?'].value_counts(normalize=False)
+asked_about_concerns_daily = data['Are you asked about your concerns daily?'].value_counts(normalize=True) * 100
+print("\nAsked About Concerns Daily (raw):")
+print(asked_about_concerns_daily_raw)
+print("\nAsked About Concerns Daily:")
+print(asked_about_concerns_daily)
+
+# Perform Chi-square test for being asked about concerns daily
+contingency_table_daily = pd.crosstab(data['What Ward'], data['Are you asked about your concerns daily?'])
+chi2_daily, p_daily, dof_daily, expected_daily = chi2_contingency(contingency_table_daily)
+
+# Display the results of the Chi-square test
+print(f'\nChi-square statistic for being asked about concerns daily: {chi2_daily}')
+print(f'p-value for being asked about concerns daily: {p_daily}')
+
 # Asked about concerns on ward round by ward
 asked_about_concerns_by_ward_raw = data.groupby('What Ward')['Have you been asked about any concerns that you may have during the ward round?'].value_counts(normalize=False).unstack()
 asked_about_concerns_by_ward = data.groupby('What Ward')['Have you been asked about any concerns that you may have during the ward round?'].value_counts(normalize=True).unstack() * 100
